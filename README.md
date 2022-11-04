@@ -2,7 +2,7 @@
 
 # Book Store
 
-**This is a Basic Book store project**
+**This is a Basic Book store project built using react**
 
 
 ## Built With
