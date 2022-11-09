@@ -5,18 +5,13 @@ const REMOVE_BOOK = 'bookstore-app/books/REMOVE_BOOK';
 const initialState = [
   {
     id: 1,
-    title: 'THE ANIMAL KINGDOM',
-    author: 'Andre Gravenberg',
+    title: '100 WAYS TO BE MONEY WISER',
+    author: 'Tilda Nabbanja',
   },
   {
     id: 2,
-    title: 'THREE CROWNS',
-    author: 'Memphis Depay',
-  },
-  {
-    id: 3,
-    title: 'DO NOT CRY',
-    author: 'Sugar Mary',
+    title: 'BACK HOUSE',
+    author: 'Butamanya George',
   },
 ];
 
