@@ -1,68 +1,54 @@
-/* eslint-disable no-case-declarations */
-import * as api from '../../api/api';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../api';
+// Actions
+const ADD_BOOK = 'bookstore-app/books/ADD_BOOK';
+const REMOVE_BOOK = 'bookstore-app/books/REMOVE_BOOK';
+const GET_BOOKS = 'bookstore-app/books/GET_BOOKS';
 
-const ADD_BOOK = 'BookStores/books/ADD_BOOK';
-const REMOVE_BOOK = 'BookStores/books/REMOVE_BOOK';
-const GET_BOOKS = 'BookStores/books/GET_BOOKS';
+const initialState = [];
 
-const handleData = (data) => {
-  const books = [];
-  const keys = Object.keys(data);
-
-  keys.forEach((key, index) => {
-    const book = data[keys[index]];
-    book[0].item_id = key;
-
-    books.push(book[0]);
+const addBook = createAsyncThunk(ADD_BOOK, async (item) => {
+  await fetch(`${api}/books`, {
+    method: 'POST',
+    body: JSON.stringify(item),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
+  return item;
+});
 
+const getBooks = createAsyncThunk(GET_BOOKS, async () => {
+  const response = await fetch(`${api}/books`);
+  const data = await response.json();
+  const books = Object.keys(data).map((key) => ({
+    ...data[key][0],
+    item_id: key,
+  }));
   return books;
-};
+});
 
-// This shows how to implement Action Creators
-export const getBooks = () => async (dispatch) => {
-  try {
-    const data = await api.fetchBooks();
+const removeBook = createAsyncThunk(REMOVE_BOOK, async (id) => {
+  await fetch(`${api}/books/${id}`, {
+    method: 'DELETE',
+  });
+  return id;
+});
 
-    dispatch({ type: GET_BOOKS, payload: handleData(data) });
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const addBook = (book) => async (dispatch) => {
-  try {
-    await api.postBook(book);
-
-    dispatch({ type: ADD_BOOK, payload: book });
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const removeBook = (bookId) => async (dispatch) => {
-  try {
-    await api.deleteBook(bookId);
-
-    dispatch({ type: REMOVE_BOOK, payload: bookId });
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-// This code shows how Reducers are implemented
-
-const reducer = (state = [], action) => {
+const reduceBook = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_BOOK:
+    case 'bookstore-app/books/ADD_BOOK/fulfilled':
       return [...state, action.payload];
-    case GET_BOOKS:
+
+    case 'bookstore-app/books/GET_BOOKS/fulfilled':
       return action.payload;
-    case REMOVE_BOOK:
-      return state.filter((book) => book.item_id !== action.payload);
+
+    case 'bookstore-app/books/REMOVE_BOOK/fulfilled':
+      return state.filter((item) => item.id !== action.payload);
     default:
       return state;
   }
 };
-// export default reducer;
-export default reducer;
+
+export default reduceBook;
+export { addBook, removeBook, getBooks };
