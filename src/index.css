@@ -240,10 +240,8 @@ button[type='submit'] {
 
 hr {
   background-color: #aeb6bf;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-  width: 97%;
   margin: auto;
+  width: 97%;
 }
 
 .form-heading {
